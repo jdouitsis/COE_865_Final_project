@@ -39,6 +39,7 @@ def read_config(config_path):
             )
 
     print(result)
+    return result
         
 def process_raw_rc_info(raw):
     return {
