@@ -1,58 +1,90 @@
+import json
 from os import listdir
 from os.path import isfile, join
 
 
+def export_processed_configs(processed_configs, export_path):
+    with open(export_path, "w") as f:
+        json.dump(processed_configs, f, indent=2)
+
+
 def read_configs(folder_path):
     result = {}
-    config_files = [
-        f for f in listdir(folder_path) 
-        if isfile(join(folder_path, f))
-    ]
+    config_files = [f for f in listdir(folder_path) if isfile(join(folder_path, f))]
     for config_file in config_files:
-        config_name = config_file.split('.')[0]
         config_path = join(folder_path, config_file)
-        result[config_name] = read_config(config_path)
+        config = read_config(config_path)
+
+        result = {
+            **result,
+            **generate_rc_to_rc_and_host_asn_connections(config),
+            **generate_host_to_rc_asn_connections(config),
+        }
 
     return result
+
+
+def generate_host_to_rc_asn_connections(config):
+    result = {}
+    cur_asn = f"ASN{config['self']['ASN']}"
+    for host in config["all_host_asn"].keys():
+        result[host] = {cur_asn: config["all_host_asn"][host]}
+    return result
+
+
+def generate_rc_to_rc_and_host_asn_connections(config):
+    return {f"ASN{config['self']['ASN']}": config["all_adj_asn"]}
 
 
 def read_config(config_path):
     result = {}
     with open(config_path) as f:
 
-        result["local_rc"] = process_raw_rc_info(
-            f.readline().split(' ')
-        )
+        result["self"] = process_raw_rc_info(f.readline().strip().split(" "))
 
-        result["connected_rcs"] = []
+        result["all_adj_rc"] = {}
         adj_rc_count = int(f.readline())
         for _ in range(adj_rc_count):
-            result["connected_rcs"].append(
-                process_raw_rc_info(f.readline().split(" "))
-            )
+            raw_data = f.readline().strip().split(" ")
+            result["all_adj_rc"][
+                get_ans_name_from_raw_rc_ans_info(raw_data)
+            ] = process_raw_rc_info(raw_data)
 
-        result["connected_ans"] = []
+        result["all_adj_asn"] = {}
         adj_ans_count = int(f.readline())
         for _ in range(adj_ans_count):
-            result["connected_ans"].append(
-                process_raw_ans_info(f.readline().strip().split(" "))
-            )
+            raw_data = f.readline().strip().split(" ")
+            raw_ans_data = process_raw_ans_info(raw_data)
+            result["all_adj_asn"][
+                get_ans_name_from_raw_ans_info(raw_data)
+            ] = raw_ans_data
 
-    print(result)
+        result["all_host_asn"] = {}
+        for adj_asn in result["all_adj_asn"].keys():
+            if adj_asn not in result["all_adj_rc"]:
+                result["all_host_asn"][adj_asn] = result["all_adj_asn"][adj_asn]
+
     return result
-        
+
+
 def process_raw_rc_info(raw):
     return {
-        'RCID': raw[0],
-        'ASN': raw[1],
-        'IP': raw[2],
+        "RCID": raw[0],
+        "ASN": raw[1],
+        "IP": raw[2],
     }
+
 
 def process_raw_ans_info(raw):
     return {
-        'ANS': raw[0],
-        'Mbps': raw[1],
-        'cost': raw[2],
+        "Mbps": raw[1],
+        "cost": raw[2],
     }
 
-    
+
+def get_ans_name_from_raw_ans_info(raw):
+    return f"ANS{raw[0]}"
+
+
+def get_ans_name_from_raw_rc_ans_info(raw):
+    return f"ANS{raw[1]}"
