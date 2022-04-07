@@ -3,11 +3,6 @@ from os import listdir
 from os.path import isfile, join
 
 
-def export_processed_configs(processed_configs, export_path):
-    with open(export_path, "w") as f:
-        json.dump(processed_configs, f, indent=2)
-
-
 def read_configs(folder_path):
     result = {}
     config_files = [f for f in listdir(folder_path) if isfile(join(folder_path, f))]

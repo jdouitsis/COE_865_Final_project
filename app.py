@@ -1,9 +1,9 @@
-from modules import Dijkstra, export_processed_configs, read_configs
+from modules import Dijkstra, export_to_output_folder, read_configs
 
 processed_configs = read_configs("configs")
 
-export_processed_configs(
-    processed_configs=processed_configs, export_path="output/processed_configs.json"
+export_to_output_folder(
+    processed_configs,"processed_configs.json"
 )
 
 nodes = processed_configs.keys()
@@ -29,6 +29,10 @@ receiver = choose_node([node for node in nodes if node != source])
 dijkstra = Dijkstra(source, processed_configs)
 
 route = dijkstra.find_path_to_node(receiver)
+
+export_to_output_folder(
+    route,"route_path.json"
+)
 
 dijkstra.animate_route(route)
 
