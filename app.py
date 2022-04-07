@@ -1,4 +1,4 @@
-from modules import dijkstra, export_processed_configs, read_configs
+from modules import Dijkstra, export_processed_configs, read_configs
 
 processed_configs = read_configs("configs")
 
@@ -20,10 +20,17 @@ def choose_node(nodes):
     return result
 
 
-# print("Choose a source from the list below:")
-# source = choose_node(nodes)
+print("Choose a source from the list below:")
+source = choose_node(nodes)
 
-# print("Choose a receiver from the list below:")
-# receiver = choose_node([node for node in nodes if node != source])
+print("Choose a receiver from the list below:")
+receiver = choose_node([node for node in nodes if node != source])
 
-dijkstra("ASN1", processed_configs)
+dijkstra = Dijkstra(source, processed_configs)
+
+route = dijkstra.find_path_to_node(receiver)
+
+dijkstra.animate_route(route)
+
+Dijkstra.print_route(route)
+
