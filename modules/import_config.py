@@ -47,17 +47,17 @@ def read_config(config_path):
         for _ in range(adj_rc_count):
             raw_data = f.readline().strip().split(" ")
             result["all_adj_rc"][
-                get_ans_name_from_raw_rc_ans_info(raw_data)
+                get_ASN_name_from_raw_rc_ASN_info(raw_data)
             ] = process_raw_rc_info(raw_data)
 
         result["all_adj_asn"] = {}
-        adj_ans_count = int(f.readline())
-        for _ in range(adj_ans_count):
+        adj_ASN_count = int(f.readline())
+        for _ in range(adj_ASN_count):
             raw_data = f.readline().strip().split(" ")
-            raw_ans_data = process_raw_ans_info(raw_data)
+            raw_ASN_data = process_raw_ASN_info(raw_data)
             result["all_adj_asn"][
-                get_ans_name_from_raw_ans_info(raw_data)
-            ] = raw_ans_data
+                get_ASN_name_from_raw_ASN_info(raw_data)
+            ] = raw_ASN_data
 
         result["all_host_asn"] = {}
         for adj_asn in result["all_adj_asn"].keys():
@@ -75,16 +75,16 @@ def process_raw_rc_info(raw):
     }
 
 
-def process_raw_ans_info(raw):
+def process_raw_ASN_info(raw):
     return {
         "Mbps": raw[1],
         "cost": raw[2],
     }
 
 
-def get_ans_name_from_raw_ans_info(raw):
-    return f"ANS{raw[0]}"
+def get_ASN_name_from_raw_ASN_info(raw):
+    return f"ASN{raw[0]}"
 
 
-def get_ans_name_from_raw_rc_ans_info(raw):
-    return f"ANS{raw[1]}"
+def get_ASN_name_from_raw_rc_ASN_info(raw):
+    return f"ASN{raw[1]}"

@@ -1,47 +1,42 @@
 {
-    "self": {
-        "RCID": "1",
-        "ASN": "100",
-        "IP": "10.2.2.1"
+    "ASN400": {
+        "cost": 9,
+        "prev": "ASN100"
     },
-    "all_adj_rc": {
-        "ANS200": {
-            "RCID": "2",
-            "ASN": "200",
-            "IP": "10.1.1.2"
-        },
-        "ANS300": {
-            "RCID": "3",
-            "ASN": "300",
-            "IP": "11.1.1.2"
-        }
+    "ASN5": {
+        "cost": 15,
+        "prev": "ASN400"
     },
-    "all_adj_asn": {
-        "ANS200": {
-            "Mbps": "10",
-            "cost": "3"
-        },
-        "ANS300": {
-            "Mbps": "10",
-            "cost": "8"
-        },
-        "ANS1": {
-            "Mbps": "2",
-            "cost": "1"
-        },
-        "ANS5": {
-            "Mbps": "5",
-            "cost": "5"
-        }
+    "ASN300": {
+        "cost": 11,
+        "prev": "ASN400"
     },
-    "all_host_asn": {
-        "ANS1": {
-            "Mbps": "2",
-            "cost": "1"
-        },
-        "ANS5": {
-            "Mbps": "5",
-            "cost": "5"
-        }
+    "ASN3": {
+        "cost": 12,
+        "prev": "ASN300"
+    },
+    "ASN6": {
+        "cost": 15,
+        "prev": "ASN300"
+    },
+    "ASN200": {
+        "cost": 18,
+        "prev": "ASN300"
+    },
+    "ASN2": {
+        "cost": 20,
+        "prev": "ASN200"
+    },
+    "ASN100": {
+        "cost": 1,
+        "prev": "ASN1"
+    },
+    "ASN1": {
+        "cost": 0,
+        "prev": None
+    },
+    "ASN4": {
+        "cost": 6,
+        "prev": "ASN100"
     }
 }

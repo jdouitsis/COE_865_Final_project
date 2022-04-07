@@ -1,1 +1,2 @@
-from .import_config import read_configs, export_processed_configs
+from .dijkstra import dijkstra
+from .import_config import export_processed_configs, read_configs
