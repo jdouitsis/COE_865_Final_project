@@ -73,7 +73,7 @@ class Dijkstra:
         for node, value in self.tree.items():
             if node in self.processed or value['cost'] == None:
                 continue
-            if next_node_cost is None or value['cost'] > next_node_cost:
+            if next_node_cost is None or value['cost'] < next_node_cost:
                 next_node = node
                 next_node_cost = value['cost']
 
