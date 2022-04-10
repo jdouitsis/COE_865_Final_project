@@ -43,26 +43,31 @@ class Dijkstra:
     def setup_default_tree(self):
         self.tree = {}
         for node in self.nodes:
-            val = {"cost": None, 'prev': None}
+            val = {"cost": None, 'prev': None, "route_cost": None}
             if node == self.source:
                 val['cost'] = 0
+                val['route_cost'] = 0
             self.tree[node] = val
 
 
     def _process_node(self, node):
         base_cost = self.tree[node]['cost']
+        base_route_cost = self.tree[node]['route_cost']
         adj_nodes_info = self.nodes[node]
 
         for adj_node, adj_node_info in adj_nodes_info.items():
             adj_node_cost = self.tree[adj_node]['cost']
-            potential_new_cost = base_cost + int(adj_node_info['cost'])
+            adj_node_route_cost = self.tree[adj_node]['route_cost']
+
+            potential_new_route_cost = base_route_cost + float(int(adj_node_info['cost']) / int(adj_node_info['Mbps']),)
 
             if adj_node in self.processed:
                 continue
 
-            if adj_node_cost == None or adj_node_cost > potential_new_cost:
+            if adj_node_cost == None or adj_node_route_cost > potential_new_route_cost:
                 self.tree[adj_node] = {
                     'cost': base_cost + int(adj_node_info['cost']),
+                    'route_cost': potential_new_route_cost,
                     'prev': node
                 }
 
@@ -71,11 +76,11 @@ class Dijkstra:
         next_node_cost = None
 
         for node, value in self.tree.items():
-            if node in self.processed or value['cost'] == None:
+            if node in self.processed or value['route_cost'] == None:
                 continue
-            if next_node_cost is None or value['cost'] < next_node_cost:
+            if next_node_cost is None or value['route_cost'] < next_node_cost:
                 next_node = node
-                next_node_cost = value['cost']
+                next_node_cost = value['route_cost']
 
         return next_node
 
